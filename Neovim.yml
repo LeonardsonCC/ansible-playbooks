@@ -27,9 +27,3 @@
   - name: "install neovim plugins"
     shell: "nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'"
 
-  - name : "neovim version"
-    shell: "nvim --version"
-    register: "output"
-
-
-  - debug: var=output.stdout_lines
