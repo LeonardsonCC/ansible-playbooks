@@ -15,6 +15,8 @@ if [ ! -f "/bin/ansible" ]; then
   exit 1
 fi
 
+echo "Starting"
+
 # Check what install
 for script in "$@"
 do
