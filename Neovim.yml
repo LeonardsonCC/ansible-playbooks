@@ -1,0 +1,35 @@
+- name: "Installing Neovim"
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: "get latest version of neovim nightly"
+    ansible.builtin.get_url:
+      url: https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+      dest: /tmp/nvim
+
+  - name: "move to user binaries folder"
+    shell: "mv /tmp/nvim $HOME/.local/bin/nvim"
+
+  - name: "give all the permission to file"
+    ansible.builtin.file:
+      path: $HOME/.local/bin/nvim
+      mode: 0777
+
+  - name : "packer exists?"
+    stat:
+      path: $HOME/.local/share/nvim/site/pack/packer
+    register: packer_folder
+
+  - name: "install packer if not exists"
+    shell: "git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim"
+    when: packer_folder.stat.exists == false
+
+  - name: "install neovim plugins"
+    shell: "nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'"
+
+  - name : "neovim version"
+    shell: "nvim --version"
+    register: "output"
+
+
+  - debug: var=output.stdout_lines
