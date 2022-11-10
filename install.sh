@@ -39,8 +39,6 @@ if [ ! -f "/bin/ansible" ]; then
   exit 1
 fi
 
-echo "Starting installations"
-
 # Check what install
 for script in "$@"
 do
@@ -59,7 +57,7 @@ do
   esac
 done
 
-mkdir /tmp/ansible-installations
+TMP_FOLDER=/tmp/ansible-installations
 
 if [ "$INSTALL_ALL" == 1 ]; then
   INSTALL_NEOVIM=1
@@ -68,6 +66,16 @@ fi
 
 if [ "$INSTALL_PACKAGES" == 1 ]; then
   ask_for_sudo
+fi
+
+echo "Installing..."
+
+# create tmp folder
+if [ ! -d $TMP_FOLDER ]; then
+  mkdir "$TMP_FOLDER"
+fi
+
+if [ "$INSTALL_PACKAGES" == 1 ]; then
   install_packages
 fi
 
@@ -79,6 +87,8 @@ if [ "$INSTALL_DOTFILES" == 1 ]; then
   install_dotfiles
 fi
 
-rm -rf /tmp/ansible-installations
+if [ -d $TMP_FOLDER ]; then
+  rm -rf "$TMP_FOLDER"
+fi
 
 echo "Finished"
