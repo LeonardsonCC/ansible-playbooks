@@ -1,0 +1,18 @@
+- name: "Get my dotfiles"
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: "dotfiles repo is already cloned"
+    stat:
+      path: $HOME/dotfiles
+    register: dotfiles_folder
+
+  - name: "checkout dotfiles"
+    ansible.builtin.git:
+      repo: 'git@github.com:LeonardsonCC/dotfiles.git'
+      dest: $HOME/dotfiles
+    when: dotfiles_folder.stat.exists == false
+
+  - name: "link files"
+    shell: "$HOME/dotfiles/install.sh"
+

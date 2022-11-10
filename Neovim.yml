@@ -24,6 +24,11 @@
     shell: "git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim"
     when: packer_folder.stat.exists == false
 
+  - name: "get my personal config"
+    ansible.builtin.git:
+      repo: "git@github.com:LeonardsonCC/nvim.git"
+      dest: "$HOME/dev/nvim"
+
   - name: "install neovim plugins"
     shell: "nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'"
 
