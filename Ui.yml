@@ -150,3 +150,54 @@
     shell:
       cmd: "ninja -C build install"
       chdir: /tmp/picom
+
+
+- name: "Compile and install polybar"
+  hosts: localhost
+  connection: local
+  tasks:
+
+  - name: "install dependencies"
+    become: true
+    apt:
+      name: [
+        "pkg-config",
+        "libuv1-dev",
+        "build-essential",
+        "clang",
+        "cmake",
+        "python3",
+        "python3-sphinx",
+        "python3-packaging",
+        "python3-xcbgen",
+        "xcb-proto",
+        "libxcb-image0-dev",
+        "libxcb-ewmh-dev",
+        "libjsoncpp-dev"
+      ]
+
+  - name: "clone repo"
+    ansible.builtin.git:
+      repo: 'https://github.com/polybar/polybar'
+      dest: /tmp/polybar
+      recursive: true
+
+  - name: "create build folder"
+    shell:
+      cmd: "mkdir -p polybar/build"
+      chdir: /tmp/
+
+  - name: "cmake"
+    shell:
+      cmd: "cmake .."
+      chdir: /tmp/polybar/build
+
+  - name: "another make"
+    shell:
+      cmd: "make -j$(nproc)"
+      chdir: /tmp/polybar/build
+
+  - name: "install"
+    shell:
+      cmd: "sudo make install"
+      chdir: /tmp/polybar/build
