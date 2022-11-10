@@ -1,4 +1,4 @@
-- name: "Install i3 and addtitional for this"
+- name: "Compile and install i3"
   hosts: localhost
   connection: local
   tasks:
@@ -91,6 +91,11 @@
     ansible.builtin.file:
       path: /tmp/i3
       state: absent
+
+- name: "Compile and install picom"
+  hosts: localhost
+  connection: local
+  tasks:
 
   - name: "install picom dependencies"
     become: true
