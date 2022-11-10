@@ -1,5 +1,9 @@
 #! /bin/bash
 
+function ask_for_sudo () {
+  sudo "$0" "$@"
+}
+
 function install_neovim () {
   echo "installing neovim"
 
@@ -15,6 +19,16 @@ function install_dotfiles () {
 
   url="https://raw.githubusercontent.com/LeonardsonCC/ansible-playbooks/main/Dotfiles.yml"
   dest="/tmp/ansible-installations/Dotfiles.yml"
+
+  wget "${url}" -O "${dest}"
+  ansible-playbook "${dest}"
+}
+
+function install_packages () {
+  echo "installing packages"
+
+  url="https://raw.githubusercontent.com/LeonardsonCC/ansible-playbooks/main/Packages.yml"
+  dest="/tmp/ansible-installations/Packages.yml"
 
   wget "${url}" -O "${dest}"
   ansible-playbook "${dest}"
@@ -37,6 +51,9 @@ do
     -d) INSTALL_DOTFILES=1;;
     --dotfiles) INSTALL_DOTFILES=1;;
 
+    -p) INSTALL_PACKAGES=1;;
+    --packages) INSTALL_PACKAGES=1;;
+
     -a) INSTALL_ALL=1;;
     --all) INSTALL_ALL=1;;
   esac
@@ -46,6 +63,12 @@ mkdir /tmp/ansible-installations
 
 if [ "$INSTALL_ALL" == 1 ]; then
   INSTALL_NEOVIM=1
+  INSTALL_PACKAGES=1
+fi
+
+if [ "$INSTALL_PACKAGES" == 1 ]; then
+  ask_for_sudo
+  install_packages
 fi
 
 if [ "$INSTALL_NEOVIM" == 1 ]; then

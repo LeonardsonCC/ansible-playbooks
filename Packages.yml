@@ -1,0 +1,9 @@
+- name: "Install packages"
+  hosts: localhost
+  connection: local
+  tasks:
+
+  - name: "install some packages"
+    become: true
+    apt:
+      name: [ "tmux", "stow", "fzf", "xclip", "ripgrep" ]
