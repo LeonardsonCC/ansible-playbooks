@@ -15,21 +15,30 @@ if [ ! -f "/bin/ansible" ]; then
   exit 1
 fi
 
-echo "Starting"
+echo "Starting installations"
 
 # Check what install
 for script in "$@"
 do
   case "${script}" in
-    n) INSTALL_NEOVIM=1;;
-    neovim) INSTALL_NEOVIM=1;;
+    -n) INSTALL_NEOVIM=1;;
+    --neovim) INSTALL_NEOVIM=1;;
+
+    -a) INSTALL_ALL=1;;
+    --all) INSTALL_ALL=1;;
   esac
 done
 
 mkdir /tmp/ansible-installations
 
-if [ -z "$INSTALL_NEOVIM" ]; then
+if [ "$INSTALL_ALL" == 1 ]; then
+  INSTALL_NEOVIM=1
+fi
+
+if [ "$INSTALL_NEOVIM" == 1 ]; then
   install_neovim
 fi
 
 rm -rf /tmp/ansible-installations
+
+echo "Finished"
