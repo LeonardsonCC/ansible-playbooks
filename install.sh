@@ -34,6 +34,16 @@ function install_packages () {
   ansible-playbook "${dest}"
 }
 
+function install_ui () {
+  echo "installing ui"
+
+  url="https://raw.githubusercontent.com/LeonardsonCC/ansible-playbooks/main/Ui.yml"
+  dest="/tmp/ansible-installations/Ui.yml"
+
+  wget "${url}" -O "${dest}"
+  ansible-playbook "${dest}"
+}
+
 if [ ! -f "/bin/ansible" ]; then
   echo "Sorry! You need ansible to run this script..."
   exit 1
@@ -52,6 +62,9 @@ do
     -p) INSTALL_PACKAGES=1;;
     --packages) INSTALL_PACKAGES=1;;
 
+    -u) INSTALL_UI=1;;
+    --ui) INSTALL_UI=1;;
+
     -a) INSTALL_ALL=1;;
     --all) INSTALL_ALL=1;;
   esac
@@ -62,6 +75,7 @@ TMP_FOLDER=/tmp/ansible-installations
 if [ "$INSTALL_ALL" == 1 ]; then
   INSTALL_NEOVIM=1
   INSTALL_PACKAGES=1
+  INSTALL_UI=1
 fi
 
 if [ "$INSTALL_PACKAGES" == 1 ]; then
@@ -85,6 +99,10 @@ fi
 
 if [ "$INSTALL_DOTFILES" == 1 ]; then
   install_dotfiles
+fi
+
+if [ "$INSTALL_UI" == 1 ]; then
+  install_ui
 fi
 
 if [ -d $TMP_FOLDER ]; then
