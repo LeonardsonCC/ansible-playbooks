@@ -201,3 +201,53 @@
     shell:
       cmd: "sudo make install"
       chdir: /tmp/polybar/build
+
+
+- name: "Compile and install conky"
+  hosts: localhost
+  connection: local
+  tasks:
+
+  - name: "install dependencies"
+    become: true
+    apt:
+      name: [
+         "cmake",
+         "libimlib2-dev",
+         "libncurses5-dev",
+         "libx11-dev",
+         "libxdamage-dev",
+         "libxft-dev",
+         "libxinerama-dev",
+         "libxml2-dev",
+         "libxext-dev",
+         "libcurl4-openssl-dev",
+         "liblua5.3-dev"
+      ]
+
+  - name: "clone repo"
+    ansible.builtin.git:
+      repo: 'https://github.com/brndnmtthws/conky'
+      dest: /tmp/conky
+      recursive: true
+
+  - name: "create build folder"
+    shell:
+      cmd: "mkdir -p conky/build"
+      chdir: /tmp/
+
+  - name: "cmake"
+    shell:
+      cmd: "cmake .."
+      chdir: /tmp/conky/build
+
+  - name: "another make"
+    shell:
+      cmd: "make"
+      chdir: /tmp/conky/build
+
+  - name: "install"
+    shell:
+      cmd: "make install"
+      chdir: /tmp/conky/build
+
