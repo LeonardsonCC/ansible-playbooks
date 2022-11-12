@@ -251,3 +251,34 @@
       cmd: "make install"
       chdir: /tmp/conky/build
 
+- name: "Compile and install dunst"
+  hosts: localhost
+  connection: local
+  tasks:
+
+  - name: "install dependencies"
+    become: true
+    apt:
+      name: [
+        "libgdk-pixbuf2.0-dev",
+        "libxrandr-dev",
+        "libnotify-dev",
+        "libxss-dev"
+      ]
+
+  - name: "clone repo"
+    ansible.builtin.git:
+      repo: 'https://github.com/dunst-project/dunst.git'
+      dest: /tmp/dunst
+      recursive: true
+
+  - name: "start build"
+    shell:
+      cmd: "WAYLAND=0 make"
+      chdir: /tmp/dunst
+
+  - name: "install"
+    shell:
+      cmd: "sudo WAYLAND=0 make install"
+      chdir: /tmp/dunst
+
